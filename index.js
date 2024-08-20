@@ -10,20 +10,39 @@ import {
   FRONTEND_URL,
   PORT,
 } from "./config.js";
+// import { connectionString } from "pg/lib/defaults.js";
 
 const app = express();
+// const pool = new pg.Pool({
+//   host: DB_HOST,
+//   database: DB_DATABASE,
+//   user: DB_USER,
+//   password: DB_PASSWORD,
+//   port: DB_PORT,
+// });
+
+// const pool = new pg.Pool({
+//   host: DB_HOST,
+//   database: DB_DATABASE,
+//   user: DB_USER,
+//   password: DB_PASSWORD,
+//   port: DB_PORT,
+// });
 const pool = new pg.Pool({
-  host: DB_HOST,
-  database: DB_DATABASE,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  port: DB_PORT,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
+
+
 app.use(
-  cors({
-    origin: FRONTEND_URL,
-  })
+  cors(
+  //   {
+  //   origin: FRONTEND_URL,
+  // }
+  )
 );
 
 app.get("/ping", async (req, res) => {
