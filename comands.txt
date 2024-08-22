@@ -1,0 +1,24 @@
+docker compose up --build
+
+conectar al contenedor 
+docker-compose ps
+docker exec -it "name" bash   <- las comillas no van 
+
+docker ps -a
+
+---->elminar contenedor<-----
+docker rm nameconteiner
+ej: docker rm focused_napier
+
+
+docker run --name atalaya -e POSTGRES_USER=root -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=atalaya -d postgres
+
+hacerlo publico abre puerto 
+docker run --name atalaya -e POSTGRES_USER=root -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=atalaya -p 5433:5432 -d postgres
+
+psql -U root -password
+
+*****primero se frena luego se elmina***
+
+
+docker-compose exec app bash

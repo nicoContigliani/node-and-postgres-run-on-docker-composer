@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: atalaya
+    ports:
+      - "5461:5432" # Change the port to 5433
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://root:postgres@db:5432/atalaya #postgres://usuario:clave@db:5432/atalaya
+    volumes:
+      - .:/usr/src/app
+      - app_data:/usr/src/app/persisted_data
+
+    # command: >
+    #   sh -c "npm install && node index.js"  
+    command: >
+      sh -c "npm install && node --watch index.js" 
+
+    #command: >
+    # sh -c "npm install && npx sequelize db:migrate && if [ ! -f /usr/src/app/seeded.lock ]; then npx sequelize db:seed:all && touch /usr/src/app/seeded.lock; fi && node index.js"
+
+    restart: on-failure
+
+volumes:
+  postgres_data:
+  app_data:

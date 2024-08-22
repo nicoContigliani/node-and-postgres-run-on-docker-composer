@@ -21,29 +21,29 @@ const app = express();
 //   port: DB_PORT,
 // });
 
-// const pool = new pg.Pool({
-//   host: DB_HOST,
-//   database: DB_DATABASE,
-//   user: DB_USER,
-//   password: DB_PASSWORD,
-//   port: DB_PORT,
-// });
+
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
 });
-
+console.log(pool,"data poll*******************")
 
 
 app.use(
   cors(
-  //   {
-  //   origin: FRONTEND_URL,
-  // }
+    //   {
+    //   origin: FRONTEND_URL,
+    // }
   )
 );
+
+app.get("/", async (req, res) => {
+
+  res.send({
+    pong: "Si puede!!!",
+  });
+});
+
+
 
 app.get("/ping", async (req, res) => {
   const result = await pool.query("SELECT NOW()");
