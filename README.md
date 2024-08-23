@@ -55,16 +55,16 @@ La estructura básica del proyecto es la siguiente:
 
 \`\`\`
 .
-├── comands.txt \`\`\`
-├── config.js\`\`\`
-├── docker-compose copy.xml\`\`\`
-├── docker-compose.yml\`\`\`
-├── Dockerfile\`\`\`
-├── index.js\`\`\`
-├── package.json\`\`\`
-├── package-lock.json\`\`\`
-├── persisted_data\`\`\`
-└── README.md\`\`\`
+├── comands.txt <br/>
+├── config.js <br/>
+├── docker-compose copy.xml <br/>
+├── docker-compose.yml <br/>
+├── Dockerfile <br/>
+├── index.js <br/>
+├── package.json <br/>
+├── package-lock.json <br/>
+├── persisted_data <br/>
+└── README.md <br/>
 \`\`\`
 
 - **docker-compose.yml**: Archivo de configuración de Docker Compose para levantar los servicios.
