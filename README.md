@@ -1,89 +1,158 @@
-# Proyecto: Node.js con PostgreSQL y Docker
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto: Node.js con PostgreSQL y Docker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        ul.file-structure {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        ul.file-structure li {
+            margin: 5px 0;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            color: #c7254e;
+            background-color: #f9f2f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
 
-├── comands.txt
-├── config.js
-├── docker-compose copy.xml
-├── docker-compose.yml
-├── Dockerfile
-├── index.js
-├── package.json
-├── package-lock.json
-├── persisted_data
-└── README.md
+    <h1>Proyecto: Node.js con PostgreSQL y Docker</h1>
 
-1. Dockerfile
-Este archivo define la imagen Docker para la aplicación Node.js.
+    <h2>Estructura del Proyecto</h2>
+    <ul class="file-structure">
+        <li>├── comands.txt</li>
+        <li>├── config.js</li>
+        <li>├── docker-compose copy.xml</li>
+        <li>├── docker-compose.yml</li>
+        <li>├── Dockerfile</li>
+        <li>├── index.js</li>
+        <li>├── package.json</li>
+        <li>├── package-lock.json</li>
+        <li>├── persisted_data/</li>
+        <li>└── README.md</li>
+    </ul>
 
--Utiliza una imagen base de Node.js (puedes ajustar la versión)
-FROM node:18-alpine
+    <div class="section">
+        <h2>1. Dockerfile</h2>
+        <p>Este archivo define la imagen Docker para la aplicación Node.js.</p>
+        <ul>
+            <li><strong>Imagen base:</strong> Utiliza una imagen base de Node.js (puedes ajustar la versión).</li>
+        </ul>
+        <pre><code>FROM node:18-alpine</code></pre>
+        
+        <ul>
+            <li><strong>Instalación de Bash:</strong> Instala Bash en Alpine Linux.</li>
+        </ul>
+        <pre><code>RUN apk add --no-cache bash</code></pre>
+        
+        <ul>
+            <li><strong>Directorio de trabajo:</strong> Establece el directorio de trabajo dentro del contenedor.</li>
+        </ul>
+        <pre><code>WORKDIR /usr/src/app</code></pre>
+        
+        <ul>
+            <li><strong>Copia de dependencias:</strong> Copia <code>package.json</code> y <code>package-lock.json</code> para instalar las dependencias.</li>
+        </ul>
+        <pre><code>COPY package*.json ./</code></pre>
+        
+        <ul>
+            <li><strong>Instalación de dependencias:</strong> Instala las dependencias.</li>
+        </ul>
+        <pre><code>RUN npm install</code></pre>
+        
+        <ul>
+            <li><strong>Copia de archivos:</strong> Copia el resto de los archivos de la aplicación.</li>
+        </ul>
+        <pre><code>COPY . .</code></pre>
+        
+        <ul>
+            <li><strong>Exposición de puertos:</strong> Exponer el puerto en el que escuchará tu aplicación (ajusta si es necesario).</li>
+        </ul>
+        <pre><code>EXPOSE 3000</code></pre>
+        
+        <ul>
+            <li><strong>Variables de entorno:</strong> Ejemplo de configuración de variables de entorno.</li>
+        </ul>
+        <pre><code>ENV NODE_ENV=production
+# ENV DATABASE_URL=postgresql://usuario:contraseña@host:puerto/database</code></pre>
+        
+        <ul>
+            <li><strong>Comando para ejecutar la aplicación:</strong> Comando para iniciar la aplicación.</li>
+        </ul>
+        <pre><code>CMD ["node", "index.js"]</code></pre>
+    </div>
 
--Instala Bash en Alpine Linux
-RUN apk add --no-cache bash
+    <div class="section">
+        <h2>2. docker-compose.yml</h2>
+        <p>Este archivo define los servicios Docker, incluyendo la aplicación Node.js y la base de datos PostgreSQL.</p>
+        <pre><code>version: '3.8'
 
--Establece el directorio de trabajo dentro del contenedor
-WORKDIR /usr/src/app
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
 
--Copia el package.json y package-lock.json para instalar las dependencias
-COPY package*.json ./
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - persisted_data:/var/lib/postgresql/data
 
--Instala las dependencias
-RUN npm install
+volumes:
+  persisted_data:</code></pre>
+    </div>
 
--Copia el resto de los archivos de la aplicación   
-
-COPY . .
-
--Exponer el puerto en el que escuchará tu aplicación (ajusta si es necesario)
-EXPOSE 3000
-
--Variables de entorno (ejemplo)
-ENV NODE_ENV=production
-#ENV DATABASE_URL=postgresql://nico:eHfkQJwpiG7m0EJZZPgzGoEwHFWSXLey@dpg-cr2a6n2j1k6c73ekdou0-a/ecomercedb_24s2
-
--Comando para ejecutar la aplicación
-CMD [ "node","index.js"]
-
-
-1. docker-compose.yml
-
-Este archivo define los servicios Docker, incluyendo la aplicación <br/>Node.js y la base de datos PostgreSQL.
-
-version: '3.8'<br/>
-
-services:<br/>
-  app:<br/>
-    build: .<br/>
-    ports:<br/>
-      - "3000:3000"<br/>
-    volumes:<br/>
-      - .:/app<br/>
-      - /app/node_modules<br/>
-    depends_on:<br/>
-      - db<br/>
-
-  db:<br/>
-    image: postgres:15<br/>
-    environment:<br/>
-      POSTGRES_USER: user<br/>
-      POSTGRES_PASSWORD: password<br/>
-      POSTGRES_DB: mydatabase<br/>
-    volumes:<br/>
-      - persisted_data:/var/lib/postgresql/data<br/>
-
-volumes:<br/>
-  persisted_data:
-
-
-3. Comands
-
--Construir y correr los contenedores Docker <br/>
-docker-compose up --build<br/>
-
--Detener y eliminar los contenedores<br/>
-docker-compose down<br/>
-
--Ejecutar un comando en el contenedor de la aplicación<br/>
-docker-compose exec app sh<br/>
-
--Acceder a la base de datos PostgreSQL<br/>
-docker-compose exec db psql -U user -d mydatabase<br/>
+    <div class="section">
+        <h2>3. Comandos</h2>
+        <ul>
+            <li><strong>Construir y correr los contenedores Docker:</strong></li>
+        </ul>
+        <pre><code>docker-compose up --build</code></pre>
+        
+        <ul>
+            <li><strong>Detener y eliminar los contenedores:</strong></li>
+        </ul>
+        <pre><code>docker-compose down</code></pre>
+        
+        <ul>
+            <li><strong>Ejecutar un comando en el contenedor de la aplicación:</strong></li>
+        </ul>
+        <pre><code>docker-compose exec app sh</code></pre>
+        
+        <ul>
+            <li><strong>Acceder a la base de datos PostgreSQL:</strong></li>
+        </ul>
+        <pre><code>docker-compose exec db psql -U user -d mydatabase</code></pre>
+    </div>
