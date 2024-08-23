@@ -77,14 +77,14 @@ volumes:
 
 3. Comands
 
-# Construir y correr los contenedores Docker
+-Construir y correr los contenedores Docker
 docker-compose up --build
 
-# Detener y eliminar los contenedores
+-Detener y eliminar los contenedores
 docker-compose down
 
-# Ejecutar un comando en el contenedor de la aplicación
+-Ejecutar un comando en el contenedor de la aplicación
 docker-compose exec app sh
 
-# Acceder a la base de datos PostgreSQL
+-Acceder a la base de datos PostgreSQL
 docker-compose exec db psql -U user -d mydatabase
