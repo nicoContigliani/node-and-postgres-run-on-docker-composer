@@ -54,7 +54,7 @@ Antes de comenzar, asegúrate de tener instalados los siguientes requisitos en t
 La estructura básica del proyecto es la siguiente:
 
 \`\`\`
-.
+. <br/>
 ├── comands.txt <br/>
 ├── config.js <br/>
 ├── docker-compose copy.xml <br/>
