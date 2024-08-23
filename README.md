@@ -1,89 +1,125 @@
-# Proyecto: Node.js con PostgreSQL y Docker
 
-├── comands.txt
-├── config.js
-├── docker-compose copy.xml
+# Proyecto Node.js con PostgreSQL
+
+Este es un proyecto de ejemplo que utiliza Node.js y PostgreSQL, corriendo sobre Docker Compose para facilitar la configuración y ejecución del entorno de desarrollo.
+
+## Requisitos
+
+Antes de comenzar, asegúrate de tener instalados los siguientes requisitos en tu máquina:
+
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Configuración del proyecto
+
+1. Clona este repositorio en tu máquina local:
+
+   \`\`\`bash
+   git clone https://github.com/tu_usuario/tu_repositorio.git
+   cd tu_repositorio
+   \`\`\`
+
+2. Crea un archivo `.env` en la raíz del proyecto con las siguientes variables de entorno:
+
+   \`\`\`bash
+   NODE_ENV=development
+   PORT=3000
+   DB_HOST=db
+   DB_PORT=5432
+   DB_USER=postgres
+   DB_PASSWORD=your_password
+   DB_NAME=your_database
+   \`\`\`
+
+   **Nota:** Puedes modificar estos valores según tus necesidades.
+
+## Ejecución del proyecto
+
+1. Construye y levanta los contenedores de Docker:
+
+   \`\`\`bash
+   docker-compose up --build
+   \`\`\`
+
+   Esto levantará los siguientes servicios:
+   - **Node.js**: La aplicación Node.js corriendo en el puerto 3000.
+   - **PostgreSQL**: La base de datos PostgreSQL.
+
+2. Accede a la aplicación:
+
+   Una vez que los contenedores estén corriendo, puedes acceder a la aplicación en \`http://localhost:3000\`.
+
+## Estructura del proyecto
+
+La estructura básica del proyecto es la siguiente:
+
+\`\`\`
+.
 ├── docker-compose.yml
-├── Dockerfile
-├── index.js
+├── .env
+├── src
+│   ├── index.js
+│   ├── config
+│   ├── controllers
+│   ├── models
+│   └── routes
 ├── package.json
-├── package-lock.json
-├── persisted_data
 └── README.md
+\`\`\`
 
-1. Dockerfile
-Este archivo define la imagen Docker para la aplicación Node.js.
+- **docker-compose.yml**: Archivo de configuración de Docker Compose para levantar los servicios.
+- **.env**: Archivo de configuración de variables de entorno.
+- **src**: Directorio principal del código fuente de la aplicación.
+  - **index.js**: Punto de entrada de la aplicación.
+  - **config**: Configuraciones de la base de datos y otros servicios.
+  - **controllers**: Controladores para manejar la lógica de negocio.
+  - **models**: Modelos de datos.
+  - **routes**: Definición de rutas de la API.
 
--Utiliza una imagen base de Node.js (puedes ajustar la versión)
-FROM node:18-alpine
+## Comandos útiles
 
--Instala Bash en Alpine Linux
-RUN apk add --no-cache bash
+- **Levantar los servicios**:
 
--Establece el directorio de trabajo dentro del contenedor
-WORKDIR /usr/src/app
+  \`\`\`bash
+  docker-compose up
+  \`\`\`
 
--Copia el package.json y package-lock.json para instalar las dependencias
-COPY package*.json ./
+- **Detener los servicios**:
 
--Instala las dependencias
-RUN npm install
+  \`\`\`bash
+  docker-compose down
+  \`\`\`
 
--Copia el resto de los archivos de la aplicación   
+- **Reconstruir los contenedores**:
 
-COPY . .
+  \`\`\`bash
+  docker-compose up --build
+  \`\`\`
 
--Exponer el puerto en el que escuchará tu aplicación (ajusta si es necesario)
-EXPOSE 3000
+- **Acceder al contenedor de Node.js**:
 
--Variables de entorno (ejemplo)
-ENV NODE_ENV=production
-#ENV DATABASE_URL=postgresql://nico:eHfkQJwpiG7m0EJZZPgzGoEwHFWSXLey@dpg-cr2a6n2j1k6c73ekdou0-a/ecomercedb_24s2
+  \`\`\`bash
+  docker exec -it tu_contenedor_node bash
+  \`\`\`
 
--Comando para ejecutar la aplicación
-CMD [ "node","index.js"]
+- **Acceder al contenedor de PostgreSQL**:
 
+  \`\`\`bash
+  docker exec -it tu_contenedor_postgres psql -U postgres -d your_database
+  \`\`\`
 
-1. docker-compose.yml
+## Migraciones de base de datos
 
-Este archivo define los servicios Docker, incluyendo la aplicación <br/>Node.js y la base de datos PostgreSQL.
+Si estás utilizando herramientas de migración de bases de datos (como Sequelize, TypeORM, etc.), asegúrate de ejecutar las migraciones después de levantar los contenedores:
 
-version: '3.8'<br/>
+\`\`\`bash
+docker exec -it tu_contenedor_node npm run migrate
+\`\`\`
 
-services:<br/>
-  app:<br/>
-    build: .<br/>
-    ports:<br/>
-      - "3000:3000"<br/>
-    volumes:<br/>
-      - .:/app<br/>
-      - /app/node_modules<br/>
-    depends_on:<br/>
-      - db<br/>
+## Contribuciones
 
-  db:<br/>
-    image: postgres:15<br/>
-    environment:<br/>
-      POSTGRES_USER: user<br/>
-      POSTGRES_PASSWORD: password<br/>
-      POSTGRES_DB: mydatabase<br/>
-    volumes:<br/>
-      - persisted_data:/var/lib/postgresql/data<br/>
+¡Las contribuciones son bienvenidas! Siéntete libre de hacer un fork del proyecto y enviar un pull request.
 
-volumes:<br/>
-  persisted_data:
+## Licencia
 
-
-3. Comands
-
--Construir y correr los contenedores Docker <br/>
-docker-compose up --build<br/>
-
--Detener y eliminar los contenedores<br/>
-docker-compose down<br/>
-
--Ejecutar un comando en el contenedor de la aplicación<br/>
-docker-compose exec app sh<br/>
-
--Acceder a la base de datos PostgreSQL<br/>
-docker-compose exec db psql -U user -d mydatabase<br/>
+Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
